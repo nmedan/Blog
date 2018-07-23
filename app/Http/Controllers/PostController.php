@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Post;
+
+use App\Tag;
+
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+
+    public function __construct() {
+        $this->middleware('auth', ['except' => ['index', 'show']]);
+    }
+
     public function index() {
         $posts = Post::published();
         return view('posts.index', compact('posts'));
@@ -21,13 +29,24 @@ class PostController extends Controller
         return view('posts.create');
     }
 
+    public function posts() {
+        return $this->belongsToMany(Post::class);
+    }
+
     public function store() {
-        $this->validate(request(), ['title'=>'reqired', 'body'=>'required']);
+        $this->validate(request(), ['title'=>'required', 'body'=>'required']);
         Post::create([
             'title' => request('title'),
             'body' => request('body'),
-            'published' => request('published')
+            'published' => (bool)request('published'),
+            'user_id'=>auth()->user()->id
         ]);
+        return redirect('/posts');
+    }
+
+    public function destroy($id) {
+        $post = Post::find($id);
+        $post->delete();
         return redirect('/posts');
     }
 

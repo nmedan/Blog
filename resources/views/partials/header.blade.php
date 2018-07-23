@@ -1,6 +1,13 @@
+@if(auth()->check()) 
+     <a href="/logout">{{auth()->user()->name}}</a>
+     <a href="/logout">Logout</a>
+
+@else 
+     <a href="/login">Login</a>
+     <a href="/register">Register</a>
+@endif
+
 <div class="blog-header">
       <div class="container">
-        <h1 class="blog-title">The Bootstrap Blog</h1>
-        <p class="lead blog-description">An example blog template built with Bootstrap.</p>
-      </div>
-    </div>
+        <h1 class="blog-title">My blog</h1>
+</div>
